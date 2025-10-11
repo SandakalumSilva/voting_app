@@ -106,6 +106,9 @@ class AdminRepository implements AdminInterface
         } elseif ($user->user_become_status == 'election_officer') {
             $user->user->role = 'election_officer';
             $user->user->save();
+        } elseif ($user->user_become_status == 'candidate') {
+            $user->user->role = 'candidate';
+            $user->user->save();
         }
 
         return response()->json([

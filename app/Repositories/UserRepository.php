@@ -127,8 +127,8 @@ class UserRepository implements UserInterface
 
         if ($user->role == 'voter') {
             $userStatus = 'candidate';
-        } else {
-            $userStatus = 'voter';
+        } elseif($user->role == 'candidate') {
+            $userStatus = 'election_officer';
         }
 
         $enrollmentRequest = EnrollmentRequest::create([

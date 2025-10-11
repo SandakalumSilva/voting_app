@@ -12,6 +12,7 @@ use COM;
 use Faker\Provider\ar_EG\Company;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class VoterRepository implements VoterInterface
 {
@@ -84,7 +85,7 @@ class VoterRepository implements VoterInterface
     ];
 
     $vote = ElectionVote::create($data);
-
+    Mail::to($voter->email)->queue(new \App\Mail\OtpSendMail($vote->otp));
     AuditLog::create([
       'user_id' => Auth::user()->id,
       'action'  => 'Vote',

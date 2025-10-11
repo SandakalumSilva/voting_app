@@ -5,26 +5,14 @@ use App\Http\Controllers\AuditlogsController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ElectionController;
 use App\Http\Controllers\ElectionOfficerController;
+use App\Http\Controllers\HomeCOntroller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoterController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    if (Auth::check()) {
-        if(Auth::user()->role == 'admin'){
-            return redirect()->route('admin.index');
-        }
-        elseif(Auth::user()->role == 'election_officer'){
-            return redirect()->route('election.officer.index');
-        }
-        elseif(Auth::user()->role == 'voter'){
-            return redirect()->route('voter.index');
-        }
-    }
-    return redirect()->route('login');
-});
+Route::get('/', [HomeCOntroller::class, 'index'])->name('dashboard');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
