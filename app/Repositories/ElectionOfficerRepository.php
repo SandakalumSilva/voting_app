@@ -19,7 +19,9 @@ class ElectionOfficerRepository implements ElectionOfficerInterface
     }
     public function getCandidates()
     {
-        $candidates = User::where('role', 'candidate')->get();
+        $candidates = User::where('role', '!=','admin')
+        ->where('role', '!=','election_officer')
+        ->get();
         return response()->json(['candidates' => $candidates]);
     }
     public function getVoters()
@@ -48,6 +50,10 @@ class ElectionOfficerRepository implements ElectionOfficerInterface
                 'positions'     => json_encode($request->positions),
                 'departments'   => json_encode($request->departments),
             ]);
+
+            foreach ($request->candidates as $candidate) {
+                User::where('id', $candidate)->update(['role' => 'candidate']);
+            }
 
 
 

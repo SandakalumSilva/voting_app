@@ -101,7 +101,6 @@ class VoterRepository implements VoterInterface
 
   public function otpVerify($id)
   {
-
     return view('voting.dashbord.voter.otp-verify', compact('id'));
   }
 

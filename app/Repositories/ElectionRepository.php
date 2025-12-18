@@ -20,7 +20,12 @@ class ElectionRepository implements ElectionInterface
 
     public function getOngoingElection()
     {
-        $elections = Election::with('votes')->where('status', 'ongoing')->get();
+        $elections = Election::with('votes')
+            ->where('status', 'ongoing')
+            ->whereHas('votes', function ($query) {
+                $query->where('is_otp_verified', true);
+            })
+            ->get();
         $electionDetails = [];
         $electionsName = [];
 

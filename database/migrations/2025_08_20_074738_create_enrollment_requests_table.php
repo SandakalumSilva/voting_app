@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)
                 ->constrained('users')
                 ->onDelete('cascade');
-            $table->enum('user_become_status', ['voter', 'candidate'])->default('candidate');
+            $table->enum('user_become_status', ['voter', 'election_officer'])->default('election_officer');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('reason')->nullable();
             $table->timestamps();

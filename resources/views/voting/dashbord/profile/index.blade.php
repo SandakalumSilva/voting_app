@@ -14,7 +14,7 @@
                         <div class="card-body">
 
                             <div class="col-auto text-center">
-                                <img id="profilePreview" src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile"
+                                <img id="profilePreview" src="{{ $user->profile_image }}" alt="Profile"
                                     class="rounded-circle border border-2 shadow-sm" width="112" height="112"
                                     style="object-fit:cover;" />
                             </div>

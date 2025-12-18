@@ -9,6 +9,9 @@ class HomeCOntroller extends Controller
 {
     public function index()
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
         switch (Auth::user()->role) {
             case 'admin':
                 return redirect()->route('admin.index');
@@ -16,7 +19,7 @@ class HomeCOntroller extends Controller
                 return redirect()->route('election.officer.index');
             case 'voter':
                 return redirect()->route('voter.index');
-                 case 'candidate':
+            case 'candidate':
                 return redirect()->route('voter.index');
             default:
                 Auth::logout();

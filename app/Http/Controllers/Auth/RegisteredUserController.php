@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -37,7 +38,10 @@ class RegisteredUserController extends Controller
             'student_id' => ['required', 'string', 'max:255', 'unique:users'],
             'profile_image' => ['required', 'image', 'max:2048'],
             'gender' => ['required'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed',  Password::min(8)          // Minimum 8 characters
+                ->letters() 
+                ->numbers()      
+                ->symbols(),],
         ]);
 
         if ($request->hasFile('profile_image')) {

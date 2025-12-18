@@ -14,11 +14,9 @@
                         @else
                             <div class="card-header bg-white">
                                 <span class="fw-semibold ">
-                                    Request to become a @if ($user->role != 'voter')
-                                        <span class="text-primary">Voter</span>
-                                    @else
-                                        <span class="text-primary">Candidate</span>
-                                    @endif
+                                    Request to become a 
+                                        <span class="text-primary">Election Officer</span>
+                                    
                                 </span>
                             </div>
                             <div class="card-body">
