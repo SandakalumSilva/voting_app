@@ -14,8 +14,6 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Full Name</th>
-                            <th scope="col">Current Position</th>
-                            <th scope="col">Request Position</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -46,14 +44,6 @@
                     {
                         data: 'user_name',
                         name: 'user_name'
-                    },
-                    {
-                        data: 'current_position',
-                        name: 'current_position'
-                    },
-                    {
-                        data: 'position',
-                        name: 'position'
                     },
                     {
                         data: 'action',

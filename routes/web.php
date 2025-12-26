@@ -12,11 +12,21 @@ use App\Http\Controllers\VoterController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeCOntroller::class, 'index'])->name('dashboard');
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/', [HomeCOntroller::class, 'index'])->name('dashboard');
+
+Route::middleware('guest')->controller(HomeController::class)->group(function () {
+    Route::get('/user-login', 'userLogin')->name('user.login');
+    Route::get('/voter-login', 'voterLogin')->name('voter.login');
+    Route::get('/officer-login', 'officerLogin')->name('officer.login');
+    Route::get('/admin-login', 'adminLogin')->name('admin.login');
+});
+
 
 
 

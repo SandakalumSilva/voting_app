@@ -70,4 +70,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(EnrollmentRequest::class);
     }
+
+    public function electionOfficer()
+    {
+        return $this->hasOne(ElectionOfficer::class);
+    }
 }

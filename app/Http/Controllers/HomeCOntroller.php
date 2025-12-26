@@ -26,4 +26,24 @@ class HomeCOntroller extends Controller
                 return redirect()->route('login');
         }
     }
+
+    public function userLogin()
+    {
+        return view('voting.auth.user-login');
+    }
+
+    public function voterLogin()
+    {
+        return view('voting.auth.voter-login');
+    }
+
+    public function officerLogin()
+    {
+        return view('voting.auth.election-officer-login');
+    }
+
+    public function adminLogin()
+    {
+        return view('voting.auth.admin-login');
+    }
 }

@@ -30,7 +30,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
                 <div class="register-card">
-                    <h3 class="text-center mb-4">Register</h3>
+                    <h3 class="text-center mb-4">Voter Register</h3>
                     <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
@@ -152,7 +152,7 @@
                         </button>
                     </form>
                     <p class="text-center mt-3">
-                        Already have an account? <a href="{{ route('login') }}">Login here</a>
+                        <a href="{{ route('login') }}" class="btn btn-primary w-100">Back</a>
                     </p>
                 </div>
             </div>

@@ -11,7 +11,7 @@
              <i class="bi bi-check2-square me-1 text-primary"></i>
              @if (Auth::user()->role == 'admin')
                  Admin
-             @elseif(Auth::user()->role == 'election_officer')
+             @elseif(session('login_type') == 'election_officer')
                  Election Officer
              @elseif(Auth::user()->role == 'voter')
                  Voter

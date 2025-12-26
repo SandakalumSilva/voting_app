@@ -15,12 +15,19 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
+    Route::get('election-officer-register', [RegisteredUserController::class, 'electionOfficerCreate'])
+        ->name('election.officer.register');
+    Route::post('election-officer-register', [RegisteredUserController::class, 'electionOfficerStore'])
+        ->name('election.officer.register.post');    
+
     Route::post('register', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('election-officer-login', [AuthenticatedSessionController::class, 'electionOfficerLogin'])
+        ->name('election.officer.login.post');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\UserInterface;
 use App\Models\AuditLog;
 use App\Models\Department;
+use App\Models\ElectionOfficer;
 use App\Models\EnrollmentRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -210,17 +211,24 @@ class UserRepository implements UserInterface
             $userStatus = 'election_officer';
         }
 
-        $enrollmentRequest = EnrollmentRequest::create([
+        $createEllectionOfficer = ElectionOfficer::create([
             'user_id' => $user->id,
-            'user_become_status' => $userStatus,
-            'status' => 'pending',
-            'reason' => $request->reason,
+            'admin_approval_status' => 'pending',
+            'email' => $user->email,
+            'password' => $user->password
         ]);
+
+        // $enrollmentRequest = EnrollmentRequest::create([
+        //     'user_id' => $user->id,
+        //     'user_become_status' => $userStatus,
+        //     'status' => 'pending',
+        //     'reason' => $request->reason,
+        // ]);
 
         AuditLog::create([
             'user_id' => Auth::user()->id,
             'action'  => 'User Request Enrollment',
-            'details' => json_encode($enrollmentRequest),
+            'details' => json_encode($createEllectionOfficer),
         ]);
 
         return response()->json([

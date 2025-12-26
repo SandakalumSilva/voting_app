@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\ElectionOfficer;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -23,6 +24,37 @@ class RegisteredUserController extends Controller
         return view('voting.auth.register');
     }
 
+    public function electionOfficerCreate(): View
+    {
+        return view('voting.auth.election-officer-register');
+    }
+
+    public function electionOfficerStore(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+            ],
+        ]);
+
+        $user = ElectionOfficer::where('email', $request->email)
+            ->where('admin_approval_status', 'approved')
+            ->first();
+
+        if (! $user) {
+            return back()->withErrors(['email' => 'No approved election officer found with this email.']);
+        } else {
+            // Update the password
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return redirect()->route('officer.login')->with('success', 'Election Officer registered successfully. You can now log in.');
+        }
+    }
+
     /**
      * Handle an incoming registration request.
      *
@@ -39,8 +71,8 @@ class RegisteredUserController extends Controller
             'profile_image' => ['required', 'image', 'max:2048'],
             'gender' => ['required'],
             'password' => ['required', 'confirmed',  Password::min(8)          // Minimum 8 characters
-                ->letters() 
-                ->numbers()      
+                ->letters()
+                ->numbers()
                 ->symbols(),],
         ]);
 

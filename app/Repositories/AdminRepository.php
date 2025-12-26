@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\AdminInterface;
 use App\Models\AuditLog;
+use App\Models\ElectionOfficer;
 use App\Models\EnrollmentRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -60,8 +61,8 @@ class AdminRepository implements AdminInterface
     }
     public function allEnrollment()
     {
-        $enrollmentRequests = EnrollmentRequest::with('user')
-            ->where('status', 'pending')
+        $enrollmentRequests = ElectionOfficer::with('user')
+            ->where('admin_approval_status', 'pending')
             ->orderBy('id', 'desc')->get();
 
         AuditLog::create([
@@ -75,12 +76,6 @@ class AdminRepository implements AdminInterface
             ->addColumn('user_name', function ($request) {
                 return $request->user ? $request->user->first_name . ' ' . $request->user->last_name : 'N/A';
             })
-            ->addColumn('current_position', function ($request) {
-                return $request->user_become_status != 'voter' ? 'Voter' : 'Election Officer';
-            })
-            ->addColumn('position', function ($request) {
-                return $request->user_become_status == 'voter' ? 'Voter' : 'Election Officer';
-            })
             ->addColumn('action', function ($request) {
                 return '<button data-id="' . $request->id . '" data-status="approved" class="btn btn-sm btn-primary approve-enrollment">Approve</button>
                         <button data-id="' . $request->id . '" data-status="rejected" class="btn btn-sm btn-danger reject-enrollment">Reject</button>';
@@ -90,8 +85,8 @@ class AdminRepository implements AdminInterface
     }
     public function voterStatus($id, $status)
     {
-        $user = EnrollmentRequest::findOrFail($id);
-        $user->status = $status;
+        $user = ElectionOfficer::findOrFail($id);
+        $user->admin_approval_status = $status;
         $user->save();
 
         AuditLog::create([
@@ -100,16 +95,16 @@ class AdminRepository implements AdminInterface
             'details' => json_encode($user),
         ]);
 
-        if ($user->user_become_status == 'voter') {
-            $user->user->role = 'voter';
-            $user->user->save();
-        } elseif ($user->user_become_status == 'election_officer') {
-            $user->user->role = 'election_officer';
-            $user->user->save();
-        } elseif ($user->user_become_status == 'candidate') {
-            $user->user->role = 'candidate';
-            $user->user->save();
-        }
+        // if ($user->user_become_status == 'voter') {
+        //     $user->user->role = 'voter';
+        //     $user->user->save();
+        // } elseif ($user->user_become_status == 'election_officer') {
+        //     $user->user->role = 'election_officer';
+        //     $user->user->save();
+        // } elseif ($user->user_become_status == 'candidate') {
+        //     $user->user->role = 'candidate';
+        //     $user->user->save();
+        // }
 
         return response()->json([
             'message' => 'Voter status updated successfully',
