@@ -4,6 +4,27 @@
         <div class="container-fluid py-4">
 
 
+            <div class="row g-3 mt-1" id="danger">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <span class="fw-semibold text-primary">
+                                <i class="bi bi-ballot me-2"></i> Create Nominations
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#createNominationModal">
+                                <i class="bi bi-plus-circle me-1"></i> New Nomination
+                            </button>
+                            <a href="{{ route('nomination.all') }}" class="btn btn-outline-danger">
+                                <i class="bi bi-plus-circle me-1"></i> All Nominations
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Danger Zone -->
             <div class="row g-3 mt-1" id="danger">
@@ -171,11 +192,111 @@
                 </div>
             </div>
 
+
+            <!-- Include the modal code from before -->
+            <div class="modal fade" id="createNominationModal" tabindex="-1" aria-labelledby="createElectionLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createElectionLabel">Create Nomination</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form id="createNominationForm" method="POST" action="{{ route('nomination.create') }}">
+                                @csrf
+
+                                <!-- Voting Period -->
+                                <div class="row g-3 mb-3">
+                                    <div class="col">
+                                        <label for="startDate" class="form-label">Start Time & Date</label>
+                                        <input type="datetime-local" class="form-control" id="startDate"
+                                            name="start_time">
+                                    </div>
+                                    <div class="col">
+                                        <label for="endDate" class="form-label">End Time & Date</label>
+                                        <input type="datetime-local" class="form-control" id="endDate"
+                                            name="end_time">
+                                    </div>
+                                </div>
+
+
+                                <!-- Positions -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Positions</label>
+
+                                    <div id="positions-wrapper">
+                                        <div class="input-group mb-2">
+                                            <input type="text" name="election_positions[]" class="form-control"
+                                                placeholder="Enter position (e.g., President)" required>
+                                            <button class="btn btn-outline-danger remove-position" type="button"
+                                                disabled>
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="add-position">
+                                        <i class="bi bi-plus-circle"></i> Add Position
+                                    </button>
+                                </div>
+
+
+
+                                <div class="modal-footer">
+                                    <button type="submit" form="createNominationForm" class="btn btn-primary">Create
+                                        Nomination</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 @endsection
 
 @section('scripts')
+    <script>
+        document.getElementById('add-position').addEventListener('click', function() {
+            const wrapper = document.getElementById('positions-wrapper');
+
+            const div = document.createElement('div');
+            div.classList.add('input-group', 'mb-2');
+
+            div.innerHTML = `
+        <input
+            type="text"
+            name="election_positions[]"
+            class="form-control"
+            placeholder="Enter position"
+            required
+        >
+        <button class="btn btn-outline-danger remove-position" type="button">
+            <i class="bi bi-trash"></i>
+        </button>
+    `;
+
+            wrapper.appendChild(div);
+        });
+
+        // Remove field
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-position')) {
+                e.target.closest('.input-group').remove();
+            }
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             $.ajax({
@@ -242,6 +363,34 @@
             });
 
             function addElection(formData, URL) {
+
+                $.ajax({
+                    type: "post",
+                    url: URL,
+                    data: formData,
+                    success: function(response) {
+                        notyf.success(response.message);
+                        setTimeout(() => window.location.reload(), 450);
+                    },
+                    error: function(xhr) {
+                        const errors = xhr.responseJSON.errors;
+                        $.each(errors, function(index, value) {
+                            notyf.error(value[0]);
+                        });
+                    }
+                });
+            }
+
+            $('#createNominationForm').on('submit', function(e) {
+                e.preventDefault();
+
+                let formData = $(this).serialize();
+                const URL = $(this).attr('action');
+                addNomination(formData, URL);
+
+            });
+
+            function addNomination(formData, URL) {
 
                 $.ajax({
                     type: "post",

@@ -12,14 +12,12 @@
                        class="bi bi-person-badge me-2"></i>Enrollement</a>
                <a class="nav-link" href="{{ route('auditlog.index') }}"><i class="bi bi-bar-chart-line me-2"></i>Audit
                    Logs</a>
-           @endif
-           @if (Auth::user()->role == 'election_officer')
+           @elseif (session('login_type') == 'election_officer')
                <a class="nav-link active" href="{{ route('election.officer.index') }}"><i
                        class="bi bi-speedometer2 me-2"></i> Dashboard</a>
                <a class="nav-link" href="{{ route('user.enrollment') }}"><i
                        class="bi bi-person-badge me-2"></i>Enrollement</a>
-           @endif
-           @if (Auth::user()->role == 'voter' || Auth::user()->role == 'candidate')
+           @elseif (Auth::user()->role == 'voter' || Auth::user()->role == 'candidate')
                <a class="nav-link active" href="{{ route('voter.index') }}"><i class="bi bi-speedometer2 me-2"></i>
                    Dashboard</a>
                <a class="nav-link" href="{{ route('user.enrollment') }}"><i

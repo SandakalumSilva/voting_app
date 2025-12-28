@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\VoterInterface;
 use App\Models\AuditLog;
 use App\Models\Election;
+use App\Models\ElectionNomination;
 use App\Models\ElectionVote;
 use App\Models\ElectionVoter;
 use App\Models\User;
@@ -45,8 +46,14 @@ class VoterRepository implements VoterInterface
       ->where('elections.end_time', '<', now())
       ->get();
 
-
-    return view('voting.dashbord.voter.index', compact('elections', 'results'));
+    $nominations = ElectionNomination::with([
+      'nominationRequests' => function ($query) {
+        $query->where('user_id', Auth::id());
+      }
+    ])
+      ->where('end_date', '>=', now())
+      ->get();
+    return view('voting.dashbord.voter.index', compact('elections', 'results', 'nominations'));
   }
 
   public function election($election)

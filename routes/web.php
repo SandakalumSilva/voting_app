@@ -6,6 +6,8 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ElectionController;
 use App\Http\Controllers\ElectionOfficerController;
 use App\Http\Controllers\HomeCOntroller;
+use App\Http\Controllers\NominationController;
+use App\Http\Controllers\NominationRequestCOntroller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoterController;
@@ -71,6 +73,23 @@ Route::prefix('election-officer')->middleware(['auth'])->controller(ElectionOffi
     Route::get('/get-candidates', 'getCandidates')->name('election.officer.get.candidates');
     Route::post('/save-election', 'saveElection')->name('election.officer.save.election');
 });
+
+//Election nomination Routes
+Route::prefix('nomination')->middleware(['auth'])->controller(NominationController::class)->group(function () {
+    Route::post('/', 'createNomination')->name('nomination.create');
+    Route::get('/get-nominations/{id}', 'getNominations')->name('nomination.get');
+    Route::get('/all-nominations', 'allNominations')->name('nomination.all');
+});
+
+//Nomination Requests Routes
+Route::prefix('nomination-requests')->middleware(['auth'])->controller(NominationRequestCOntroller::class)->group(function () {
+    Route::get('/', 'nominationRequests')->name('nomination.requests');
+    Route::post('/create-request', 'createNominationRequest')->name('nomination.request.create');
+    Route::get('/withdraw-request/{id}', 'withdrawNominationRequest')->name('nomination.request.withdraw');
+    Route::get('/get-nomination-requests/{id}', 'getNominationRequests')->name('nomination.request.get');
+    Route::post('change-status', 'changeStatus')->name('nomination.request.change.status');
+});
+
 // Election Routes
 Route::prefix('election')->middleware(['auth'])->controller(ElectionController::class)->group(function () {
     Route::get('/ongoing-election', 'ongoingElection')->name('election.ongoing.election');
